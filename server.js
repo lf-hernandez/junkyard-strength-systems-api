@@ -1,13 +1,16 @@
-const express = require('express');
-const bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
+import cors from 'cors';
+import router from './routes/index.js';
 
 const port = process.env.PORT || 3000;
 
 const app = express();
 
+app.use(cors);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-app.listen(port, () => {
-    console.log(`listening on http://localhost:${port}`);
-  });
+app.use('/api', router);
+
+app.listen(port, () => console.log(`listening on http://localhost:${port}`));
