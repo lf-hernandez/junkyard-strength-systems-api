@@ -1,4 +1,6 @@
-import { Model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
+const Model = mongoose.model;
 
 const keys = {
     name: {

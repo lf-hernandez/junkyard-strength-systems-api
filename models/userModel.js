@@ -1,4 +1,6 @@
-import { Model, Schema } from 'mongoose';
+import mongoose from 'mongoose';
+const Schema = mongoose.Schema;
+const Model = mongoose.model;
 
 const keys = {
     username: {
@@ -18,6 +20,10 @@ const keys = {
     email: {
         type: String,
         required: true
+    },
+    password: {
+        type: String,
+        required: true
     }
 };
 
@@ -27,5 +33,10 @@ const options = {
 
 const userSchema = new Schema(keys, options);
 const userModel = new Model('user', userSchema);
+
+export async function createUser(payload) {
+    const user = new userModel(payload);
+    await user.save();
+}
 
 export default userModel;
