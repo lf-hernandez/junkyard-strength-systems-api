@@ -8,13 +8,8 @@
         "watch": "nodemon server.js",
         "debug": "node --inspect=0.0.0.0:9000 server.js",
         "lint": "eslint .",
-        "lint:fix": "eslint --fix .",
+        "lint:fix": "eslint . --fix",
         "format": "prettier --write \"**/*.+(js|json|md)\""
-    },
-    "husky": {
-        "hooks": {
-            "pre-commit": "npm run lint && npm run format"
-        }
     },
     "dependencies": {
         "body-parser": "^1.19.0",

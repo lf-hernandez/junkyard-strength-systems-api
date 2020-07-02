@@ -1,6 +1,4 @@
 {
-    "lint-staged": {
-        "*.+(js)": ["eslint --fix", "git add"],
-        "*.+(json|md)": ["prettier --write", "git add"]
-    }
+    "*.js": "npm run lint:fix",
+    "*.{json,md}": "npm run format"
 }
