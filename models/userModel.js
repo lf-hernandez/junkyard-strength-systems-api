@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+
 const Schema = mongoose.Schema;
 const Model = mongoose.model;
 
@@ -34,9 +35,19 @@ const options = {
 const userSchema = new Schema(keys, options);
 const userModel = new Model('user', userSchema);
 
-export async function createUser(payload) {
+export async function insertUser(payload) {
     const user = new userModel(payload);
-    await user.save();
+    user._id = new mongoose.Types.ObjectId();
+    const document = await user.save();
+
+    return document;
 }
 
-export default userModel;
+export async function findUserByEmail(email) {
+    const user = await userModel.findOne({ email: email });
+    return user;
+}
+
+export async function dropUser(id) {
+    return await userModel.deleteOne({ _id: id });
+}
