@@ -4,8 +4,7 @@ import {
     onConflict,
     onCreated,
     onError,
-    onSuccess,
-    onSuccessWithToken,
+    onSuccessWithPayload,
     onUnauthorized
 } from '../helpers/responseHelper.js';
 import { generateSaltHash, getJWT, validatePassword } from '../helpers/authHelper.js';
@@ -43,15 +42,15 @@ export async function logInUser(req, res) {
             return onUnauthorized(res, 'auth failed');
         } else {
             const token = getJWT(user._id, user.email);
-            return onSuccessWithToken(res, token, 'auth succeeded');
+            return onSuccessWithPayload(res, token, 'auth succeeded');
         }
     }
 }
 
 export async function deleteUser(req, res) {
     try {
-        await dropUser({ _id: req.params.id });
-        return onSuccess(res, 'user deleted');
+        const droppedUser = await dropUser({ _id: req.params.id });
+        return onSuccessWithPayload(res, droppedUser, 'user deleted');
     } catch (error) {
         return onError(res, error);
     }

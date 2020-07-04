@@ -5,10 +5,10 @@ export function onSuccess(res, message) {
     return res.status(200).json(body);
 }
 
-export function onSuccessWithToken(res, token, message) {
+export function onSuccessWithPayload(res, payload, message) {
     const body = {
         message,
-        token
+        payload
     };
     return res.status(200).json(body);
 }
