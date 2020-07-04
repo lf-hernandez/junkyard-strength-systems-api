@@ -4,7 +4,7 @@ Node API for Junkyard Strength Systems
 
 ---
 
-## Project setup
+## Install project dependencies
 ```
 npm install
 ```
