@@ -11,14 +11,6 @@ import {
 
 import { insertUser } from '../models/userModel';
 
-export function generateSaltHash(password) {
-    const salt = crypto.randomBytes(16).toString('base64');
-    const hash = crypto.createHmac('sha512', salt).update(password).digest('base64');
-    const saltHash = salt + hash;
-
-    return { salt, saltHash };
-}
-
 export async function registerUser(req, res) {
     const { salt, saltHash } = generateSaltHash(req.body.password);
 
@@ -33,14 +25,13 @@ export async function registerUser(req, res) {
         return onBadRequest;
     }
 }
-export function validatePassword(userModel, req) {
-    const { password, salt } = userModel;
-    console.log(salt);
 
-    return (
-        password ===
-        salt + crypto.createHmac('sha512', salt).update(req.body.password).digest('base64')
-    );
+export function generateSaltHash(password) {
+    const salt = crypto.randomBytes(16).toString('base64');
+    const hash = crypto.createHmac('sha512', salt).update(password).digest('base64');
+    const saltHash = salt + hash;
+
+    return { salt, saltHash };
 }
 
 export function validateUser(user, req, res) {
@@ -56,6 +47,16 @@ export function validateUser(user, req, res) {
             return onError(res, error);
         }
     }
+}
+
+export function validatePassword(userModel, req) {
+    const { password, salt } = userModel;
+    console.log(salt);
+
+    return (
+        password ===
+        salt + crypto.createHmac('sha512', salt).update(req.body.password).digest('base64')
+    );
 }
 
 export function getJWT(id, email) {
