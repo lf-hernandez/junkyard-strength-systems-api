@@ -2,7 +2,15 @@ export function onSuccess(res, message) {
     const body = {
         message
     };
-    res.status(200).json(body);
+    return res.status(200).json(body);
+}
+
+export function onSuccessWithToken(res, token, message) {
+    const body = {
+        message,
+        token
+    };
+    return res.status(200).json(body);
 }
 
 export function onCreated(res, message, payload) {

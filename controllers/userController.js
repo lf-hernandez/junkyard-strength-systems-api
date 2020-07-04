@@ -5,9 +5,10 @@ import {
     onCreated,
     onError,
     onSuccess,
+    onSuccessWithToken,
     onUnauthorized
 } from '../helpers/responseHelper.js';
-import { generateSaltHash, validatePassword } from '../helpers/authHelper.js';
+import { generateSaltHash, getJWT, validatePassword } from '../helpers/authHelper.js';
 
 export async function registerUser(req, res) {
     const isUserRegistered = await findUserByEmail(req.body.email);
@@ -41,7 +42,8 @@ export async function logInUser(req, res) {
         if (!isPasswordValid) {
             return onUnauthorized(res, 'auth failed');
         } else {
-            return onSuccess(res, 'auth succeeded');
+            const token = getJWT(user._id, user.email);
+            return onSuccessWithToken(res, token, 'auth succeeded');
         }
     }
 }
