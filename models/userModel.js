@@ -53,5 +53,5 @@ export async function findUserByEmail(email) {
 }
 
 export async function dropUser(id) {
-    return await userModel.deleteOne({ _id: id });
+    return await userModel.findByIdAndDelete({ _id: id });
 }

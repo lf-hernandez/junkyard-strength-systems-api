@@ -41,8 +41,12 @@ export async function logInUser(req, res) {
         if (!isPasswordValid) {
             return onUnauthorized(res, 'auth failed');
         } else {
-            const token = getJWT(user._id, user.email);
-            return onSuccessWithPayload(res, token, 'auth succeeded');
+            try {
+                const token = getJWT(user._id, user.email);
+                return onSuccessWithPayload(res, token, 'auth succeeded');
+            } catch (error) {
+                return onError(res, error);
+            }
         }
     }
 }
