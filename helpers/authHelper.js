@@ -1,6 +1,16 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
+import {
+    onCreated,
+    onSuccessWithPayload,
+    onBadRequest,
+    onUnauthorized,
+    onError
+} from './responseHelper,js';
+
+import { insertUser } from '../models/userModel';
+
 export function generateSaltHash(password) {
     const salt = crypto.randomBytes(16).toString('base64');
     const hash = crypto.createHmac('sha512', salt).update(password).digest('base64');
@@ -9,6 +19,20 @@ export function generateSaltHash(password) {
     return { salt, saltHash };
 }
 
+export async function registerUser(req, res) {
+    const { salt, saltHash } = generateSaltHash(req.body.password);
+
+    req.body.password = saltHash;
+    req.body.salt = salt;
+
+    try {
+        const document = await insertUser(req.body);
+
+        return onCreated(res, 'success', { id: document._id });
+    } catch (error) {
+        return onBadRequest;
+    }
+}
 export function validatePassword(userModel, req) {
     const { password, salt } = userModel;
     console.log(salt);
@@ -17,6 +41,21 @@ export function validatePassword(userModel, req) {
         password ===
         salt + crypto.createHmac('sha512', salt).update(req.body.password).digest('base64')
     );
+}
+
+export function validateUser(user, req, res) {
+    const isPasswordValid = validatePassword(user, req);
+
+    if (!isPasswordValid) {
+        return onUnauthorized(res, 'auth failed');
+    } else {
+        try {
+            const token = getJWT(user._id, user.email);
+            return onSuccessWithPayload(res, token, 'auth succeeded');
+        } catch (error) {
+            return onError(res, error);
+        }
+    }
 }
 
 export function getJWT(id, email) {
