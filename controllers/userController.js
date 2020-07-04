@@ -5,7 +5,7 @@ import {
     onSuccessWithPayload,
     onUnauthorized
 } from '../helpers/responseHelper.js';
-import { registerUser, validateUser } from '../helpers/authHelper.js';
+import { registerUser, authenticateUser } from '../helpers/authHelper.js';
 
 export async function userRegistration(req, res) {
     const isUserRegistered = await findUserByEmail(req.body.email);
@@ -24,8 +24,8 @@ export async function userAuthentication(req, res) {
     if (!user) {
         return onUnauthorized(res, 'auth failed');
     } else {
-        const validatedUser = validateUser(user, req, res);
-        return validatedUser;
+        const authenticatedUser = authenticateUser(user, req, res);
+        return authenticatedUser;
     }
 }
 

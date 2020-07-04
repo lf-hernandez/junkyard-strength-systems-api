@@ -33,7 +33,7 @@ export function generateSaltHash(password) {
     return { salt, saltHash };
 }
 
-export function validateUser(user, req, res) {
+export function authenticateUser(user, req, res) {
     const isPasswordValid = validatePassword(user, req);
 
     if (!isPasswordValid) {
