@@ -1,11 +1,19 @@
 import crypto from 'crypto';
-import { insertUser, findUserByEmail, dropUser } from '../models/userModel.js';
+import { dropUser, findUserByEmail, insertUser } from '../models/userModel.js';
+import {
+    onBadRequest,
+    onConflict,
+    onCreated,
+    onError,
+    onSuccess,
+    onUnauthorized
+} from '../helpers/responseHelper.js';
 
 export async function registerUser(req, res) {
-    const isUserRegistered = findUserByEmail(req.body.email);
+    const isUserRegistered = await findUserByEmail(req.body.email);
 
     if (isUserRegistered) {
-        return res.status(409).json({ message: 'email is already associated with an account' });
+        return onConflict(res, 'email is already associated with an account');
     } else {
         const salt = crypto.randomBytes(16).toString('base64');
         const hash = crypto.createHmac('sha512', salt).update(req.body.password).digest('base64');
@@ -15,9 +23,9 @@ export async function registerUser(req, res) {
 
         try {
             const document = await insertUser(req.body);
-            res.status(201).send({ id: document._id });
+            return onCreated(res, 'success', { id: document._id });
         } catch (error) {
-            res.status(400);
+            return onBadRequest;
         }
     }
 }
@@ -27,26 +35,25 @@ export async function logInUser(req, res) {
     const { password, salt } = user;
 
     if (!user) {
-        return res.status(401).json({ message: 'auth failed' });
+        return onUnauthorized(res, 'auth failed');
     } else {
         const isPasswordValid =
             password ===
             salt + crypto.createHmac('sha512', salt).update(req.body.password).digest('base64');
 
         if (!isPasswordValid) {
-            return res.status(401).json({ message: 'auth failed' });
+            return onUnauthorized(res, 'auth failed');
         } else {
-            return res.status(201).json({ message: 'auth succeeded' });
+            return onSuccess(res, 'auth succeeded');
         }
     }
 }
 
 export async function deleteUser(req, res) {
-    console.log('delete user');
     try {
         await dropUser({ _id: req.params.id });
-        res.status(200).json({ message: 'user deleted' });
+        return onSuccess(res, 'user deleted');
     } catch (error) {
-        res.status(500).json({ error });
+        return onError(res, error);
     }
 }
