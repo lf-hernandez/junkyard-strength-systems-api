@@ -8,7 +8,6 @@ import {
     onUnauthorized,
     onError
 } from './responseHelper,js';
-
 import { insertUser } from '../models/userModel';
 
 export async function registerUser(req, res) {
