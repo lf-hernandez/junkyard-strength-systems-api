@@ -68,3 +68,11 @@ export async function fullUpdate(id, user) {
     const options = { new: true, useFindAndModify: false };
     return await userModel.findByIdAndReplace(id, user, options).exec();
 }
+
+export async function getAllUsers() {
+    return userModel.find().exec();
+}
+
+export async function getUser(id) {
+    return userModel.findById(id).exec();
+}
