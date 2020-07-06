@@ -18,7 +18,7 @@ export async function registerUser(req, res) {
 
     try {
         const document = await insertUser(req.body);
-        res.location(`users/${document.id}`);
+        res.location(`${req.baseURL}/users/${document.id}`);
 
         return onCreated(res, 'success', { id: document._id });
     } catch (error) {
