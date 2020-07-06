@@ -39,19 +39,21 @@ export async function userDeletion(req, res) {
 }
 
 export async function userPatch(req, res) {
+    console.log('running patch');
     try {
         const updatedUser = await partialUpdate(req.body.id, req.body.partialUpdate);
-        return onSuccessWithPayload(req, res, updatedUser);
+
+        return onSuccessWithPayload(res, updatedUser);
     } catch (error) {
-        return onError(req, res);
+        return onError(res, error);
     }
 }
 
 export async function userUpdate(req, res) {
     try {
         const updatedUser = await fullUpdate(req.body.id, req.body.updatedUser);
-        return onSuccessWithPayload(req, res, updatedUser);
+        return onSuccessWithPayload(res, updatedUser);
     } catch (error) {
-        return onError(req, res);
+        return onError(res, error);
     }
 }
