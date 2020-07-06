@@ -7,7 +7,7 @@ import {
     onBadRequest,
     onUnauthorized,
     onError
-} from './responseHelper,js';
+} from './responseHelper.js';
 import { insertUser } from '../models/userModel';
 
 export async function registerUser(req, res) {
@@ -18,6 +18,7 @@ export async function registerUser(req, res) {
 
     try {
         const document = await insertUser(req.body);
+        res.location(`${req.baseURL}/${document.id}`);
 
         return onCreated(res, 'success', { id: document._id });
     } catch (error) {
