@@ -60,11 +60,8 @@ export async function dropUser(id) {
 
 export async function partialUpdate(id, partial) {
     const options = { new: true, useFindAndModify: false };
-    return await userModel
-        .findByIdAndUpdate(id, partial, options, (error, document) => {
-            return document;
-        })
-        .exec();
+
+    return await userModel.findByIdAndUpdate(id, partial, options).exec();
 }
 
 export async function fullUpdate(id, user) {
