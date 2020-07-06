@@ -52,7 +52,7 @@ export async function userPatch(req, res) {
 
 export async function userUpdate(req, res) {
     try {
-        const updatedUser = await fullUpdate(req.params.id, req.body.updatedUser);
+        const updatedUser = await fullUpdate(req.params.id, req.body.user);
         return onSuccessWithPayload(res, updatedUser, 'User updated');
     } catch (error) {
         return onError(res, error);
