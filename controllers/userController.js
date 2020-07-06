@@ -1,4 +1,11 @@
-import { dropUser, findUserByEmail, fullUpdate, partialUpdate } from '../models/userModel.js';
+import {
+    dropUser,
+    findUserByEmail,
+    fullUpdate,
+    partialUpdate,
+    getAllUsers,
+    getUser
+} from '../models/userModel.js';
 import {
     onConflict,
     onError,
@@ -7,7 +14,7 @@ import {
 } from '../helpers/responseHelper.js';
 import { registerUser, authenticateUser } from '../helpers/authHelper.js';
 
-export async function userRegistration(req, res) {
+export async function onSignUp(req, res) {
     const isUserRegistered = await findUserByEmail(req.body.email);
 
     if (isUserRegistered) {
@@ -18,7 +25,7 @@ export async function userRegistration(req, res) {
     }
 }
 
-export async function userAuthentication(req, res) {
+export async function onLogIn(req, res) {
     const user = await findUserByEmail(req.body.email);
 
     if (user) {
@@ -29,7 +36,7 @@ export async function userAuthentication(req, res) {
     }
 }
 
-export async function userDeletion(req, res) {
+export async function onDelete(req, res) {
     try {
         const droppedUser = await dropUser({ _id: req.params.id });
         return onSuccessWithPayload(res, droppedUser, 'User deleted');
@@ -38,7 +45,7 @@ export async function userDeletion(req, res) {
     }
 }
 
-export async function userPatch(req, res) {
+export async function onPatch(req, res) {
     if (req.body.op === 'replace') {
         try {
             const partial = { [req.body.path]: req.body.value };
@@ -50,10 +57,28 @@ export async function userPatch(req, res) {
     }
 }
 
-export async function userUpdate(req, res) {
+export async function onUpdate(req, res) {
     try {
         const updatedUser = await fullUpdate(req.params.id, req.body.user);
         return onSuccessWithPayload(res, updatedUser, 'User updated');
+    } catch (error) {
+        return onError(res, error);
+    }
+}
+
+export async function onGetAll(req, res) {
+    try {
+        const users = await getAllUsers();
+        return onSuccessWithPayload(res, users);
+    } catch (error) {
+        return onError(res, error);
+    }
+}
+
+export async function onGet(req, res) {
+    try {
+        const user = await getUser(req.params.id);
+        return onSuccessWithPayload(res, user);
     } catch (error) {
         return onError(res, error);
     }

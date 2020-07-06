@@ -1,10 +1,12 @@
 import express from 'express';
 const router = express.Router();
 
-import { userDeletion, userPatch, userUpdate } from '../controllers/userController.js';
+import { onGetAll, onGet, onPatch, onUpdate, onDelete } from '../controllers/userController.js';
 
-router.delete('/:id', userDeletion);
-router.patch('/:id', userPatch);
-router.put('/:id', userUpdate);
+router.get('/', onGetAll);
+router.get('/:id', onGet);
+router.patch('/:id', onPatch);
+router.put('/:id', onUpdate);
+router.delete('/:id', onDelete);
 
 export default router;
