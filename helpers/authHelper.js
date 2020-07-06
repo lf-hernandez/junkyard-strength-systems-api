@@ -22,7 +22,7 @@ export async function registerUser(req, res) {
 
         return onCreated(res, 'success', { id: document._id });
     } catch (error) {
-        return onBadRequest;
+        return onBadRequest(res, error);
     }
 }
 

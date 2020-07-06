@@ -43,7 +43,7 @@ const userModel = new Model('user', userSchema);
 export async function insertUser(payload) {
     const user = new userModel(payload);
     user._id = new mongoose.Types.ObjectId();
-    const document = await user.save().exec();
+    const document = await user.save();
 
     return document;
 }
