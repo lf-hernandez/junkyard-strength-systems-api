@@ -8,7 +8,7 @@ import {
     onUnauthorized,
     onError
 } from './responseHelper.js';
-import { insertUser } from '../models/userModel';
+import { insertUser } from '../models/userModel.js';
 
 export async function registerUser(req, res) {
     const { salt, saltHash } = generateSaltHash(req.body.password);
@@ -18,7 +18,7 @@ export async function registerUser(req, res) {
 
     try {
         const document = await insertUser(req.body);
-        res.location(`${req.baseURL}/${document.id}`);
+        res.location(`users/${document.id}`);
 
         return onCreated(res, 'success', { id: document._id });
     } catch (error) {
