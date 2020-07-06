@@ -1,4 +1,4 @@
-import { dropUser, findUserByEmail } from '../models/userModel.js';
+import { dropUser, findUserByEmail, fullUpdate, partialUpdate } from '../models/userModel.js';
 import {
     onConflict,
     onError,
@@ -21,11 +21,11 @@ export async function userRegistration(req, res) {
 export async function userAuthentication(req, res) {
     const user = await findUserByEmail(req.body.email);
 
-    if (!user) {
-        return onUnauthorized(res, 'auth failed');
-    } else {
+    if (user) {
         const authenticatedUser = authenticateUser(user, req, res);
         return authenticatedUser;
+    } else {
+        return onUnauthorized(res, 'auth failed');
     }
 }
 
@@ -35,5 +35,23 @@ export async function userDeletion(req, res) {
         return onSuccessWithPayload(res, droppedUser, 'user deleted');
     } catch (error) {
         return onError(res, error);
+    }
+}
+
+export async function userPatch(req, res) {
+    try {
+        const updatedUser = await partialUpdate(req.body.id, req.body.partialUpdate);
+        return onSuccessWithPayload(req, res, updatedUser);
+    } catch (error) {
+        return onError(req, res);
+    }
+}
+
+export async function userUpdate(req, res) {
+    try {
+        const updatedUser = await fullUpdate(req.body.id, req.body.updatedUser);
+        return onSuccessWithPayload(req, res, updatedUser);
+    } catch (error) {
+        return onError(req, res);
     }
 }

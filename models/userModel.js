@@ -20,6 +20,7 @@ const keys = {
     },
     email: {
         type: String,
+        unique: true,
         required: true
     },
     password: {
@@ -54,4 +55,14 @@ export async function findUserByEmail(email) {
 
 export async function dropUser(id) {
     return await userModel.findByIdAndDelete({ _id: id });
+}
+
+export async function partialUpdate(id, partial) {
+    const options = { new: true };
+    return await userModel.findByIdAndUpdate(id, partial, options);
+}
+
+export async function fullUpdate(id, user) {
+    const options = { new: true };
+    return await userModel.findByIdAndReplace(id, user, options);
 }
