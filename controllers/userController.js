@@ -8,6 +8,7 @@ import {
 } from '../models/userModel.js';
 import {
     onConflict,
+    onCreated,
     onError,
     onSuccessWithPayload,
     onUnauthorized
@@ -21,7 +22,10 @@ export async function onSignUp(req, res) {
         return onConflict(res, 'Email is already associated with an existing account');
     } else {
         const registeredUser = await registerUser(req, res);
-        return registeredUser;
+
+        res.location(`${req.baseUrl}/users/${registeredUser.id}`);
+
+        return onCreated(res, 'success', { id: registeredUser._id });
     }
 }
 

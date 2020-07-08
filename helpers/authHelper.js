@@ -1,13 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
-import {
-    onCreated,
-    onSuccessWithPayload,
-    onBadRequest,
-    onUnauthorized,
-    onError
-} from './responseHelper.js';
+import { onSuccessWithPayload, onBadRequest, onUnauthorized, onError } from './responseHelper.js';
 import { insertUser } from '../models/userModel.js';
 
 export async function registerUser(req, res) {
@@ -18,9 +12,7 @@ export async function registerUser(req, res) {
 
     try {
         const document = await insertUser(req.body);
-        res.location(`${req.baseUrl}/users/${document.id}`);
-
-        return onCreated(res, 'success', { id: document._id });
+        return document;
     } catch (error) {
         return onBadRequest(res, error);
     }
