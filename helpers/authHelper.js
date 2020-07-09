@@ -1,7 +1,7 @@
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
-import { onSuccessWithPayload, onBadRequest, onUnauthorized, onError } from './responseHelper.js';
+import { onBadRequest, onUnauthorized, onError } from './responseHelper.js';
 import { insertUser } from '../models/userModel.js';
 
 export async function registerUser(req, res) {
@@ -34,7 +34,7 @@ export function authenticateUser(user, req, res) {
     } else {
         try {
             const token = getJWT(user._id, user.email);
-            return onSuccessWithPayload(res, token, 'auth succeeded');
+            return token;
         } catch (error) {
             return onError(res, error);
         }
