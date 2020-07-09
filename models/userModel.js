@@ -44,7 +44,6 @@ export async function insertUser(payload) {
     const user = new userModel(payload);
     user._id = new mongoose.Types.ObjectId();
     const document = await user.save();
-
     return document;
 }
 
@@ -60,7 +59,6 @@ export async function dropUser(id) {
 
 export async function partialUpdate(id, partial) {
     const options = { new: true, useFindAndModify: false };
-
     return await userModel.findByIdAndUpdate(id, partial, options).exec();
 }
 
