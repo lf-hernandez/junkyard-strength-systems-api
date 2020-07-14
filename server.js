@@ -3,6 +3,7 @@ dotenv.config();
 
 import express from 'express';
 import bodyParser from 'body-parser';
+import helmet from 'helmet';
 
 import { connectDb } from './services/dbService.js';
 import router from './routes/index.js';
@@ -15,6 +16,8 @@ connectDb();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+app.use(helmet());
 
 app.use('/api', router);
 
