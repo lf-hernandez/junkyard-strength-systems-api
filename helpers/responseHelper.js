@@ -1,3 +1,4 @@
+// santi: nice work here on these functions using correct http return codes
 export function onSuccess(res, message) {
     const body = {
         message

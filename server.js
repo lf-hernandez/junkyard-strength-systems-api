@@ -24,3 +24,5 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use('/api', router);
 
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
+
+// santi: consider using typescript on next project, I see more and more projects on both client and server using typescript
