@@ -16,23 +16,32 @@ import {
 import { registerUser, authenticateUser } from '../helpers/authHelper.js';
 
 export async function onSignUp(req, res) {
-    const isUserRegistered = await findUserByEmail(req.body.email);
-    if (isUserRegistered) {
-        return onConflict(res, 'Email is already associated with an existing account');
-    } else {
-        const registeredUser = await registerUser(req, res);
-        res.location(`${req.baseUrl}/users/${registeredUser.id}`);
-        return onCreated(res, 'success', { id: registeredUser._id });
+    try {
+        const isUserRegistered = await findUserByEmail(req.body.email);
+        if (isUserRegistered) {
+            return onConflict(res, 'Email is already associated with an existing account');
+        } else {
+            const registeredUser = await registerUser(req, res);
+            res.location(`${req.baseUrl}/users/${registeredUser.id}`);
+            return onCreated(res, 'success', { id: registeredUser._id });
+        }
+    } catch (error) {
+        onError(res, error);
     }
 }
 
 export async function onLogIn(req, res) {
-    const user = await findUserByEmail(req.body.email);
-    if (user) {
-        const authenticatedUser = authenticateUser(user, req, res);
-        return onSuccessWithPayload(res, authenticatedUser, 'auth succeeded');
-    } else {
-        return onUnauthorized(res, 'Bad credentials');
+    try {
+        const user = await findUserByEmail(req.body.email);
+
+        if (user) {
+            const authenticatedUser = authenticateUser(user, req, res);
+            return onSuccessWithPayload(res, authenticatedUser, 'auth succeeded');
+        } else {
+            return onUnauthorized(res, 'Bad credentials');
+        }
+    } catch (error) {
+        return onError(res, error);
     }
 }
 
