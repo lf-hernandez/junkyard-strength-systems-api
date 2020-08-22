@@ -9,7 +9,7 @@ import compression from 'compression';
 import { connectDb } from './services/dbService.js';
 import router from './routes/index.js';
 
-export async function start() {
+export function start() {
     const port = process.env.PORT;
     const environment = process.env.NODE_ENV;
 
@@ -22,7 +22,7 @@ export async function start() {
 
     const app = express();
 
-    await connectDb(environment);
+    connectDb(environment);
 
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({ extended: false }));
