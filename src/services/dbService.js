@@ -7,18 +7,19 @@ mongoose.Promise = global.Promise;
 
 const mongoDev = `mongodb://${dbConfig.devDbUser}:${dbConfig.devDbPw}@${dbConfig.devDbServer}:${dbConfig.devDbPort}/${dbConfig.devDb}`;
 const mongoProd = '';
+
 let dbUri = '';
 
-console.log(`process.env.DATA_OPTION=${process.env.DATA_OPTION}`);
-if (process.env.DATA_OPTION === 'dev') {
-    dbUri = mongoDev;
-} else {
-    dbUri = mongoProd;
-}
-console.log(`Database URI: ${dbUri}`);
+async function connectWithRetry(env) {
+    if (env === 'DEVELOPMENT') {
+        mongoose.set('debug', true);
+        dbUri = mongoDev;
+    } else {
+        dbUri = mongoProd;
+    }
 
-async function connectWithRetry() {
-    mongoose.set('debug', true);
+    console.log(`Database URI: ${dbUri}`);
+
     try {
         await connect(dbUri, {
             useNewUrlParser: true,
@@ -32,8 +33,8 @@ async function connectWithRetry() {
     }
 }
 
-export function connectDb() {
-    connectWithRetry();
+export async function connectDb(env) {
+    await connectWithRetry(env);
 }
 
 process.on('SIGINT', () => {
